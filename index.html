@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Timer</title>
+</head>
+<body>
+    <h1>WebSocket Timer</h1>
+    <div id="timer"></div>
+
+    <script>
+        const socket = new WebSocket("ws://localhost:8080/echo");
+
+        socket.addEventListener('open', (event) => {
+            console.log('WebSocket connection opened:', event);
+            startTimer();
+        });
+
+        socket.addEventListener('message', (event) => {
+            updateTimer(event.data);
+        });
+
+        function startTimer() {
+            socket.send("start");
+        }
+
+        function updateTimer(seconds) {
+            const timerElement = document.getElementById('timer');
+            timerElement.textContent = `Time remaining: ${seconds} seconds`;
+
+            if (seconds === 0) {
+                timerElement.textContent = 'Timer expired!';
+            }
+        }
+    </script>
+</body>
+</html>
